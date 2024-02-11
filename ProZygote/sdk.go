@@ -13,6 +13,8 @@ type ProZygote struct {
 	client *rpc.Client
 }
 
+const _version = "24.1.31"
+
 // Init 初始化
 func (app *ProZygote) Init(port string) error {
 	client, err := rpc.DialHTTP("tcp", port)
@@ -57,12 +59,48 @@ func (app *ProZygote) GetProcessLog(uuid string) (bool, []string, error) {
 	var response config.GetProcLogResponse
 	err := app.client.Call("ProcServerImpl.GetProcLog", request, &response)
 	if err != nil {
-		return false, nil, fmt.Errorf("call rpc  error %s", err)
+		return false, nil, fmt.Errorf("call rpc ProcServerImpl.GetProcLog error %s", err)
 	}
 	if response.Error != "" {
 		return false, nil, errors.New(response.Error)
 	}
 	return response.Exist, response.Logs, nil
+}
+
+// KillProcess 尝试杀死某进程
+func (app *ProZygote) KillProcess(uuid string) (bool, error) {
+	if err := app.checkState(); err != nil {
+		return false, err
+	}
+	request := &config.KillProcLogRequest{
+		UUID: uuid,
+	}
+	var response config.KillProcLogResponse
+	err := app.client.Call("ProcServerImpl.KillProc", request, &response)
+	if err != nil {
+		return false, fmt.Errorf("call rpc ProcServerImpl.KillProc error %s", err)
+	}
+	if response.Error != "" {
+		return false, errors.New(response.Error)
+	}
+	return response.Success, nil
+}
+
+// GetVersion 获取client和server的版本
+func (app *ProZygote) GetVersion() (string, string, error) {
+	if err := app.checkState(); err != nil {
+		return _version, "", err
+	}
+
+	var response string
+	err := app.client.Call("ProcServerImpl.GetVersion", 1, &response)
+	if err != nil {
+		return _version, "", fmt.Errorf("call rpc ProcServerImpl.GetVersion error %s", err)
+	}
+	if response == "" {
+		return _version, "", errors.New("unknown version. Check api change.")
+	}
+	return _version, response, nil
 }
 
 // Destroy 关闭
