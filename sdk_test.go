@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ProcZygoteSDK/ProZygote"
-	"ProcZygoteSDK/config"
+	"github.com/bydBoys/ProcZygoteSDK/ProZygote"
+	"github.com/bydBoys/ProcZygoteSDK/config"
 	"log"
 	"testing"
 )

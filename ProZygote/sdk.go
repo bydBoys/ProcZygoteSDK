@@ -1,9 +1,9 @@
 package ProZygote
 
 import (
-	"ProcZygoteSDK/config"
 	"errors"
 	"fmt"
+	"github.com/bydBoys/ProcZygoteSDK/config"
 	"net/rpc"
 )
 

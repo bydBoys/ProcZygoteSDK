@@ -1,3 +1,3 @@
-module ProcZygoteSDK
+module https://github.com/bydBoys/ProcZygoteSDK
 
 go 1.21
