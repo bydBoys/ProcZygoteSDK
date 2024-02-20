@@ -1,22 +1,22 @@
-package ProZygote
+package ProcessIsolator
 
 import (
 	"errors"
 	"fmt"
-	"github.com/bydBoys/ProcZygoteSDK/config"
+	"github.com/bydBoys/ProcessIsolatorSDK/config"
 	"net/rpc"
 )
 
-// ProZygote SDK对象，创建后需调用Init函数
-type ProZygote struct {
+// ProcessIsolator SDK对象，创建后需调用Init函数
+type ProcessIsolator struct {
 	state  int
 	client *rpc.Client
 }
 
-const _version = "24.1.31"
+const _version = "24.2.20"
 
 // Init 初始化
-func (app *ProZygote) Init(port string) error {
+func (app *ProcessIsolator) Init(port string) error {
 	client, err := rpc.DialHTTP("tcp", port)
 	if err != nil {
 		app.state = initFail
@@ -28,7 +28,7 @@ func (app *ProZygote) Init(port string) error {
 }
 
 // StartProcess 启动程序
-func (app *ProZygote) StartProcess(commands []string, userConfig config.UserIsolated, cgroupConfig config.CGroup) (string, error) {
+func (app *ProcessIsolator) StartProcess(commands []string, userConfig config.UserIsolated, cgroupConfig config.CGroup) (string, error) {
 	if err := app.checkState(); err != nil {
 		return "", err
 	}
@@ -49,7 +49,7 @@ func (app *ProZygote) StartProcess(commands []string, userConfig config.UserIsol
 }
 
 // GetProcessLog 查看某个程序是否结束，以及他的日志
-func (app *ProZygote) GetProcessLog(uuid string) (bool, []string, error) {
+func (app *ProcessIsolator) GetProcessLog(uuid string) (bool, []string, error) {
 	if err := app.checkState(); err != nil {
 		return false, nil, err
 	}
@@ -68,7 +68,7 @@ func (app *ProZygote) GetProcessLog(uuid string) (bool, []string, error) {
 }
 
 // KillProcess 尝试杀死某进程
-func (app *ProZygote) KillProcess(uuid string) (bool, error) {
+func (app *ProcessIsolator) KillProcess(uuid string) (bool, error) {
 	if err := app.checkState(); err != nil {
 		return false, err
 	}
@@ -87,7 +87,7 @@ func (app *ProZygote) KillProcess(uuid string) (bool, error) {
 }
 
 // GetVersion 获取client和server的版本
-func (app *ProZygote) GetVersion() (string, string, error) {
+func (app *ProcessIsolator) GetVersion() (string, string, error) {
 	if err := app.checkState(); err != nil {
 		return _version, "", err
 	}
@@ -104,7 +104,7 @@ func (app *ProZygote) GetVersion() (string, string, error) {
 }
 
 // Destroy 关闭
-func (app *ProZygote) Destroy() {
+func (app *ProcessIsolator) Destroy() {
 	app.state = closed
 	_ = app.client.Close()
 }

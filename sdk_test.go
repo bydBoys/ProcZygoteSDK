@@ -1,15 +1,15 @@
 package main
 
 import (
-	"github.com/bydBoys/ProcZygoteSDK/ProZygote"
-	"github.com/bydBoys/ProcZygoteSDK/config"
+	"github.com/bydBoys/ProcessIsolatorSDK/ProcessIsolator"
+	"github.com/bydBoys/ProcessIsolatorSDK/config"
 	"log"
 	"testing"
 )
 
 func TestSDK(t *testing.T) {
 	// 初始化Zygote实例
-	zygote := new(ProZygote.ProZygote)
+	zygote := new(ProcessIsolator.ProcessIsolator)
 	// new完第一步必须init
 	if err := zygote.Init("127.0.0.1:9963"); err != nil {
 		log.Fatal(err)

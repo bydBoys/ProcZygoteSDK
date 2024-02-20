@@ -1,15 +1,9 @@
 package config
 
 type (
-	Record struct {
-		Pid  int    `json:"pid"`
-		UUID string `json:"uuid"`
-	}
-
 	StartProcRequest struct {
-		Commands     []string `json:"commands"`
-		UserIsolated `json:"user_isolated"`
-		CGroup       `json:"c_group"`
+		IsolatedEnvironment IsolatedEnvironment
+		Command             []string `json:"command"`
 	}
 	StartProcResponse struct {
 		Error string `json:"error"`
@@ -33,10 +27,10 @@ type (
 		Error   string `json:"error"`
 	}
 
-	IProcServer interface {
-		StartProc(request *StartProcRequest, response *StartProcResponse) error
-		GetProcLog(request *GetProcLogRequest, response *GetProcLogResponse) error
-		KillProc(request *KillProcLogRequest, response *KillProcLogResponse) error
-		GetVersion(request *int, response *string) error
+	GetVersionRequest struct {
+		Requester string `json:"requester"`
+	}
+	GetVersionResponse struct {
+		Version string `json:"version"`
 	}
 )
